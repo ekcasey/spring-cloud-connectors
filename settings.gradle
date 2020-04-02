@@ -5,5 +5,6 @@ include "${rootProject.name}-cloudfoundry-connector"
 include "${rootProject.name}-spring-service-connector"
 include "${rootProject.name}-heroku-connector"
 include "${rootProject.name}-localconfig-connector"
+include "${rootProject.name}-cnb-connector"
 
 project(":${rootProject.name}-connectors-core").projectDir = file("${rootProject.name}-core")

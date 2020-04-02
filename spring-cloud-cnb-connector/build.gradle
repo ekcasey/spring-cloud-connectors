@@ -1,0 +1,49 @@
+description = 'Spring Cloud Connectors CNB Binding Connector'
+
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+	}
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+ext {
+	jacksonVersion = "2.10.0"
+}
+
+dependencies {
+	compile project(':spring-cloud-connectors-core')
+	compile("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+}
+
+shadowJar {
+	classifier = null
+	dependencies {
+		include dependency('com.fasterxml.jackson.core:jackson-.*')
+		exclude('module-info.class')
+	}
+	relocate 'com.fasterxml.jackson', 'org.springframework.cloud.cloudfoundry.com.fasterxml.jackson'
+}
+
+assemble.dependsOn shadowJar
+install.dependsOn shadowJar
+
+configurations {
+	tests
+}
+
+task testJar(type: Jar) {
+	classifier = 'tests'
+	from sourceSets.test.output
+}
+
+build.dependsOn testJar
+
+artifacts {
+	tests testJar
+	archives testJar
+}
